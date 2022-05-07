@@ -75,6 +75,7 @@ function createMineSweeper() {
 	amountOfBombs(newGame.level, newGame.board);
 	// newGame.startGame();
 	placeBombs(newGame.board, newGame.bombs);
+	renderBoard();
 
 	console.log(newGame.board);
 	console.log(newGame.level);
@@ -110,6 +111,26 @@ function placeBombs(array, bombs) {
 			bombs--;
 		}
 	}
+}
+
+function renderBoard() {
+	// input value = attribute style for grid-columns & grid-rows
+	const size = Math.sqrt(newGame.board.length);
+	const string = '1fr '.repeat(size);
+	console.log(string);
+	const boardContainer = document.querySelector('.boardContainer');
+	while (boardContainer.lastChild) {
+		boardContainer.removeChild(boardContainer.lastChild);
+	}
+	boardContainer.style.gridTemplateColumns = `${string}`;
+	boardContainer.style.gridTemplateRows = `${string}`;
+
+	for (let i = 0; i < newGame.board.length; i++) {
+		const gridItem = document.createElement('div');
+		gridItem.classList.add('square');
+		boardContainer.appendChild(gridItem);
+	}
+	boardContainer.style.display = 'grid';
 }
 
 btnGenerateBoard.addEventListener('click', createMineSweeper);
