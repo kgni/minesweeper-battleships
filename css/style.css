@@ -1,0 +1,13 @@
+.timer {
+	position: absolute;
+}
+
+.inputContainer {
+	padding-top: 4.8rem;
+	display: flex;
+	justify-content: center;
+}
+
+.boardContainer {
+	display: grid;
+}
