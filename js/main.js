@@ -70,16 +70,16 @@ function createMineSweeper() {
 		alert('Board size has to be a number');
 		throw Error('Board size has to be a number');
 	}
-	// newGame.board = boardSize;
+
 	newGame.level = level;
 	amountOfBombs(newGame.level, newGame.board);
-	// newGame.startGame();
 	placeBombs(newGame.board, newGame.bombs);
 	renderBoard();
 
 	console.log(newGame.board);
 	console.log(newGame.level);
 	console.log(newGame.bombs);
+	// newGame.startGame();
 }
 
 function amountOfBombs(level, boardArr) {
@@ -128,6 +128,7 @@ function renderBoard() {
 	for (let i = 0; i < newGame.board.length; i++) {
 		const gridItem = document.createElement('div');
 		gridItem.classList.add('square');
+		gridItem.classList.add(`${i}}`);
 		boardContainer.appendChild(gridItem);
 	}
 	boardContainer.style.display = 'grid';
