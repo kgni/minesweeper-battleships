@@ -76,6 +76,7 @@ function createMineSweeper() {
 	placeBombs(newGame.board, newGame.bombs);
 	populateWithNumbers();
 	renderBoard();
+	checkClickedValue();
 
 	console.log(newGame.board);
 	console.log(newGame.level);
@@ -182,9 +183,84 @@ function populateWithNumbers() {
 }
 
 //check clicked box (bomb), (empty) or (number for showing if a bomb is adjacent)
-// function checkClickedValue(){
-// 	if()
-// }
+function checkClickedValue() {
+	const squares = document.querySelectorAll('.square');
+	for (square of squares) {
+		square.addEventListener('click', (e) => {
+			const indexClicked = Number(e.target.classList[1].slice(0, -1));
+			openRecursion(indexClicked);
+		});
+	}
+}
+
+function openRecursion(index) {
+	const width = Math.sqrt(newGame.board.length);
+	// const square = document.querySelector(`.${index}`);
+	const squares = document.querySelectorAll('.square');
+	if (newGame.board[index] === 'x') {
+		const bombImg = document.createElement('img');
+		bombImg.src = 'img/explosion.png';
+		squares[index].appendChild(bombImg);
+		squares[index].style.backgroundColor = 'red';
+
+		isGameOver = true;
+		//call function "lost"
+	} else if (typeof newGame.board[index] === 'number') {
+		squares[index].style.backgroundColor = '#ebebeb';
+		squares[index].innerText = `${newGame.board[index]}`;
+		if (squares[index].innerText === '1') {
+			squares[index].style.color = 'green';
+		}
+		if (squares[index].innerText === '2') {
+			squares[index].style.color = 'blue';
+		}
+		if (squares[index].innerText === '3') {
+			squares[index].style.color = 'orange';
+		}
+	} else {
+		squares[index].style.backgroundColor = '#ebebeb';
+		//DOM opening
+		//edge conditions
+		const rightEdge = (index + 1) % width !== 1;
+		const leftEdge = index % width !== 0;
+		const topEdge = index - width < 0;
+		const bottomEdge = index + width > width ** 2;
+		console.log('test');
+		if (index % width !== undefined) {
+			// open in DOM
+			//call recursion surrounding
+			openRecursion(index - width - 1);
+		}
+		// up
+		if (index - width !== undefined) {
+			openRecursion(index - width);
+		}
+		//upper right
+		if (index - width + 1 !== undefined) {
+			openRecursion(index - width + 1);
+		}
+		//left
+		if (index % width !== 1) {
+			openRecursion(index - 1);
+		}
+		// right
+		if (index % width !== 0) {
+			openRecursion(index + 1);
+		}
+		//down left
+		if ((index % width) - 1 !== undefined) {
+			openRecursion(index + width - 1);
+		}
+		//down
+		if (index + width !== undefined) {
+			openRecursion(index + width);
+		}
+		//down right
+		if (index + width + 1 !== undefined) {
+			openRecursion(index + width + 1);
+		}
+	}
+}
 
 // Create board on page load (board is by default going to be 9x9)
 window.onload = createMineSweeper();
