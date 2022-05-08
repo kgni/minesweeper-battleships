@@ -74,6 +74,7 @@ function createMineSweeper() {
 	newGame.level = level;
 	amountOfBombs(newGame.level, newGame.board);
 	placeBombs(newGame.board, newGame.bombs);
+	populateWithNumbers();
 	renderBoard();
 
 	console.log(newGame.board);
@@ -134,6 +135,60 @@ function renderBoard() {
 	boardContainer.style.display = 'grid';
 }
 
+//populate array with numbers adjacent to bombs
+//bomb in 8 squares surrounding add change array[index] = num  of bombs
+function populateWithNumbers() {
+	const width = Math.sqrt(newGame.board.length);
+	for (let i = 0; i < newGame.board.length; i++) {
+		if (newGame.board[i] !== 'x') {
+			let bombs = 0;
+			//upper left
+			if (newGame.board[i - width - 1] === 'x' && i % width !== 0) {
+				bombs++;
+			}
+			// left
+			if (newGame.board[i - width] === 'x') {
+				bombs++;
+			}
+			//upper right
+			if (newGame.board[i - width + 1] === 'x' && i % width !== width - 1) {
+				bombs++;
+			}
+			//left
+			if (newGame.board[i - 1] === 'x' && i % width !== 0) {
+				bombs++;
+			}
+			// right
+			if (newGame.board[i + 1] === 'x' && i % width !== width - 1) {
+				bombs++;
+			}
+			//down left
+			if (newGame.board[i + width - 1] === 'x' && i % width !== 0) {
+				bombs++;
+			}
+			//down
+			if (newGame.board[i + width] === 'x') {
+				bombs++;
+			}
+			//down right
+			if (newGame.board[i + width + 1] === 'x' && i % width !== width - 1) {
+				bombs++;
+			}
+			if (bombs > 0) {
+				newGame.board[i] = bombs;
+			}
+		}
+	}
+}
+
+//check clicked box (bomb), (empty) or (number for showing if a bomb is adjacent)
+// function checkClickedValue(){
+// 	if()
+// }
+
+// Create board on page load (board is by default going to be 9x9)
+window.onload = createMineSweeper();
+// window.addEventListener('load', createMineSweeper);
 btnGenerateBoard.addEventListener('click', createMineSweeper);
 
 //Button for testing purposes

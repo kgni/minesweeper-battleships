@@ -21,15 +21,15 @@ main {
 	min-height: 80vh;
 	max-height: 800px;
 	max-width: 800px;
-	border: 0.5px solid black;
+	border: 0.5px solid rgb(105, 105, 105);
 	margin: 0 auto;
 }
 
 .square {
 	background-color: rgb(201, 201, 201);
-	border: 0.5px solid black;
+	border: 0.5px solid rgb(97, 97, 97);
 	cursor: pointer;
-	transition: 200ms;
+	transition: 100ms;
 }
 
 .square:hover {
