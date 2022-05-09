@@ -130,7 +130,7 @@ function renderBoard() {
 	for (let i = 0; i < newGame.board.length; i++) {
 		const gridItem = document.createElement('div');
 		gridItem.classList.add('square');
-		gridItem.classList.add(`${i}}`);
+		gridItem.classList.add(`${i}`);
 		boardContainer.appendChild(gridItem);
 	}
 	boardContainer.style.display = 'grid';
@@ -186,8 +186,23 @@ function populateWithNumbers() {
 function checkClickedValue() {
 	const squares = document.querySelectorAll('.square');
 	for (square of squares) {
+		square.addEventListener('contextmenu', (e) => {
+			e.preventDefault();
+			if (
+				e.target.classList.contains('flag') ||
+				e.target.classList.contains('checked')
+			) {
+				e.target.classList.remove('flag');
+				newGame.bombFlags--;
+			} else {
+				e.target.classList.add('flag');
+				newGame.bombFlags++;
+			}
+		});
+	}
+	for (square of squares) {
 		square.addEventListener('click', (e) => {
-			const indexClicked = Number(e.target.classList[1].slice(0, -1));
+			const indexClicked = Number(e.target.classList[1]);
 			openRecursion(indexClicked);
 		});
 	}
@@ -197,17 +212,30 @@ function openRecursion(index) {
 	const width = Math.sqrt(newGame.board.length);
 	// const square = document.querySelector(`.${index}`);
 	const squares = document.querySelectorAll('.square');
+	if (
+		squares[index].classList.contains('checked') ||
+		squares[index].classList.contains('flag')
+	) {
+		return;
+	}
+	squares[index].classList.add('checked');
 	if (newGame.board[index] === 'x') {
 		const bombImg = document.createElement('img');
 		bombImg.src = 'img/explosion.png';
 		squares[index].appendChild(bombImg);
-		squares[index].style.backgroundColor = 'red';
+		// squares[index].style.backgroundColor = 'red';
 
-		isGameOver = true;
+		newGame.isGameOver = true;
+		const checkedTotal = Array.from(squares).filter((square) =>
+			square.className.includes('checked')
+		).length;
+		checkGameOver('lose', checkedTotal);
+		return;
 		//call function "lost"
 	} else if (typeof newGame.board[index] === 'number') {
 		squares[index].style.backgroundColor = '#ebebeb';
 		squares[index].innerText = `${newGame.board[index]}`;
+		//add checked to classlist
 		if (squares[index].innerText === '1') {
 			squares[index].style.color = 'green';
 		}
@@ -218,54 +246,114 @@ function openRecursion(index) {
 			squares[index].style.color = 'orange';
 		}
 	} else {
-		squares[index].style.backgroundColor = '#ebebeb';
-		//DOM opening
-		//edge conditions
-		const rightEdge = (index + 1) % width !== 1;
-		const leftEdge = index % width !== 0;
-		const topEdge = index - width < 0;
-		const bottomEdge = index + width > width ** 2;
-		console.log('test');
-		if (index % width !== undefined) {
-			// open in DOM
-			//call recursion surrounding
-			openRecursion(index - width - 1);
-		}
-		// up
-		if (index - width !== undefined) {
-			openRecursion(index - width);
-		}
-		//upper right
-		if (index - width + 1 !== undefined) {
-			openRecursion(index - width + 1);
-		}
-		//left
-		if (index % width !== 1) {
-			openRecursion(index - 1);
-		}
-		// right
-		if (index % width !== 0) {
-			openRecursion(index + 1);
-		}
-		//down left
-		if ((index % width) - 1 !== undefined) {
-			openRecursion(index + width - 1);
-		}
-		//down
-		if (index + width !== undefined) {
-			openRecursion(index + width);
-		}
-		//down right
-		if (index + width + 1 !== undefined) {
-			openRecursion(index + width + 1);
-		}
+		setTimeout(() => {
+			squares[index].style.backgroundColor = '#ebebeb';
+			//DOM opening
+			//edge conditions
+			const rightEdge = index % width === width - 1;
+			const leftEdge = index % width === 0;
+			const topEdge = index - width < 0;
+			const bottomEdge = index + width > width ** 2;
+			//up left
+			if (!topEdge && !leftEdge) {
+				// open in DOM
+				//call recursion surrounding
+				openRecursion(index - width - 1);
+			}
+			// up
+			if (!topEdge) {
+				openRecursion(index - width);
+			}
+			//upper right
+			if (!topEdge && !rightEdge) {
+				openRecursion(index - width + 1);
+			}
+			//left
+			if (!leftEdge) {
+				openRecursion(index - 1);
+			}
+			// right
+			if (!rightEdge) {
+				openRecursion(index + 1);
+			}
+			//down left
+			if (!bottomEdge && !leftEdge) {
+				openRecursion(index + width - 1);
+			}
+			//down
+			if (!bottomEdge) {
+				openRecursion(index + width);
+			}
+			//down right
+			if (!bottomEdge && !rightEdge) {
+				openRecursion(index + width + 1);
+			}
+		}, 10);
+	}
+	//if unchecked boxes == bombs newGame.gameIsOver = true
+	//squares
+	console.log(
+		Array.from(squares).filter((square) => square.className.includes('checked'))
+			.length
+	);
+	if (
+		newGame.board.length -
+			Array.from(squares).filter((square) =>
+				square.className.includes('checked')
+			).length ===
+		newGame.bombs
+	) {
+		const checkedTotal = Array.from(squares).filter((square) =>
+			square.className.includes('checked')
+		).length;
+		checkGameOver('win', checkedTotal);
 	}
 }
 
-// Create board on page load (board is by default going to be 9x9)
+function checkGameOver(condition, amount) {
+	if (condition === 'win') {
+		const gameOverModal = document.querySelector('.gameOverModal');
+		gameOverModal.classList.remove('hidden');
+
+		const amountEl = document.createElement('h3');
+		amountEl.innerText = `You dodged ${newGame.bombs} bombs!`;
+		gameOverModal.prepend(amountEl);
+
+		const loserText = document.createElement('h2');
+		loserText.innerText = 'YOU WIN!';
+		gameOverModal.prepend(loserText);
+		return;
+	} else if (condition === 'lose') {
+		const gameOverModal = document.querySelector('.gameOverModal');
+		gameOverModal.classList.remove('hidden');
+
+		const amountEl = document.createElement('h3');
+		amountEl.innerText = `You cleared ${amount - 1}/${
+			newGame.board.length - newGame.bombs
+		} possible areas!`;
+		gameOverModal.prepend(amountEl);
+
+		const loserText = document.createElement('h2');
+		loserText.innerText = 'YOU LOST!';
+		gameOverModal.prepend(loserText);
+		return;
+	}
+}
+
 window.onload = createMineSweeper();
-// window.addEventListener('load', createMineSweeper);
 btnGenerateBoard.addEventListener('click', createMineSweeper);
+
+const restartBtn = document.querySelector('.restartBtn');
+
+restartBtn.addEventListener('click', () => {
+	const gameOverModal = document.querySelector('.gameOverModal');
+	gameOverModal.classList.add('hidden');
+	location.reload();
+});
+
+// Create board on page load (board is by default going to be 9x9)
+
+// window.addEventListener('load', createMineSweeper);
 
 //Button for testing purposes
 // document.querySelector('.test').addEventListener('click', tester);
