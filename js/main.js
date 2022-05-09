@@ -25,6 +25,7 @@ class MineSweeper {
 		this.bombs = 0;
 		this.bombFlags = 0;
 		this.isGameOver = false;
+		this.timer = 0;
 	}
 
 	renderClick() {
@@ -77,7 +78,7 @@ function createMineSweeper() {
 	populateWithNumbers();
 	renderBoard();
 	checkClickedValue();
-
+	startTimer();
 	console.log(newGame.board);
 	console.log(newGame.level);
 	console.log(newGame.bombs);
@@ -337,8 +338,31 @@ function checkGameOver(condition, amount) {
 		loserText.innerText = 'YOU LOST!';
 		gameOverModal.prepend(loserText);
 		return;
+	} else if (condition === "time"){
+		const gameOverModal = document.querySelector('.gameOverModal');
+		gameOverModal.classList.remove('hidden');
+
+		const amountEl = document.createElement('h3');
+		amountEl.innerText = `Ran out of time`;
+		gameOverModal.prepend(amountEl);
+
+		const loserText = document.createElement('h2');
+		loserText.innerText = 'YOU LOST!';
+		gameOverModal.prepend(loserText);
 	}
 }
+//timer start and running
+function startTimer(){
+	newGame.timer = Number(newGame.timer) + 1;
+	if(newGame.timer > 99){
+		checkGameOver("time");
+		clearInterval();
+		newGame.timer = 0;
+	}
+	console.log(newGame.timer)
+};
+setInterval("startTimer()", 1000);
+
 
 window.onload = createMineSweeper();
 btnGenerateBoard.addEventListener('click', createMineSweeper);
@@ -349,6 +373,7 @@ restartBtn.addEventListener('click', () => {
 	const gameOverModal = document.querySelector('.gameOverModal');
 	gameOverModal.classList.add('hidden');
 	location.reload();
+	newGame.timer = 0;
 });
 
 // Create board on page load (board is by default going to be 9x9)
