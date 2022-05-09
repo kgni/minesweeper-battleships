@@ -59,7 +59,6 @@ img {
 
 .flag {
 	background-image: url('../img/flag.png');
-	z-index: -1;
 	background-position: center;
 	background-size: 50%;
 	background-repeat: no-repeat;
