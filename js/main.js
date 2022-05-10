@@ -71,6 +71,9 @@ function createMineSweeper() {
 		alert('Board size has to be a number');
 		throw Error('Board size has to be a number');
 	}
+	newGame.timer = 0;
+	const timer = document.querySelector('.timer');
+	timer.innerText = 100;
 
 	newGame.level = level;
 	amountOfBombs(newGame.level, newGame.board);
@@ -78,7 +81,6 @@ function createMineSweeper() {
 	populateWithNumbers();
 	renderBoard();
 	checkClickedValue();
-	startTimer();
 	console.log(newGame.board);
 	console.log(newGame.level);
 	console.log(newGame.bombs);
@@ -189,6 +191,7 @@ function checkClickedValue() {
 	for (square of squares) {
 		square.addEventListener('contextmenu', (e) => {
 			e.preventDefault();
+
 			if (
 				e.target.classList.contains('flag') ||
 				e.target.classList.contains('checked')
@@ -204,6 +207,9 @@ function checkClickedValue() {
 	for (square of squares) {
 		square.addEventListener('click', (e) => {
 			const indexClicked = Number(e.target.classList[1]);
+			if (newGame.timer === 0) {
+				startTimer();
+			}
 			openRecursion(indexClicked);
 		});
 	}
@@ -338,7 +344,7 @@ function checkGameOver(condition, amount) {
 		loserText.innerText = 'YOU LOST!';
 		gameOverModal.prepend(loserText);
 		return;
-	} else if (condition === "time"){
+	} else if (condition === 'time') {
 		const gameOverModal = document.querySelector('.gameOverModal');
 		gameOverModal.classList.remove('hidden');
 
@@ -352,17 +358,23 @@ function checkGameOver(condition, amount) {
 	}
 }
 //timer start and running
-function startTimer(){
+function startTimer() {
 	newGame.timer = Number(newGame.timer) + 1;
-	if(newGame.timer > 99){
-		checkGameOver("time");
+	if (newGame.timer > 99) {
+		checkGameOver('time');
 		clearInterval();
 		newGame.timer = 0;
 	}
-	console.log(newGame.timer)
-};
-setInterval("startTimer()", 1000);
+	const timer = document.querySelector('.timer');
+	timer.innerText = 100 - newGame.timer;
+	console.log(newGame.timer);
+}
 
+setInterval(() => {
+	if (newGame.timer > 0 && !newGame.isGameOver) {
+		startTimer();
+	}
+}, 1000);
 
 window.onload = createMineSweeper();
 btnGenerateBoard.addEventListener('click', createMineSweeper);
