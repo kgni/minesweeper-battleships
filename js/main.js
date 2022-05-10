@@ -75,9 +75,12 @@ function createMineSweeper() {
 	const timer = document.querySelector('.timer');
 	timer.innerText = 100;
 
+	const bombsDom = document.querySelector('.bombs');
+
 	newGame.level = level;
 	amountOfBombs(newGame.level, newGame.board);
 	placeBombs(newGame.board, newGame.bombs);
+	bombsDom.innerText = `${newGame.bombs}`;
 	populateWithNumbers();
 	renderBoard();
 	checkClickedValue();
@@ -227,6 +230,7 @@ function openRecursion(index) {
 	}
 	squares[index].classList.add('checked');
 	if (newGame.board[index] === 'x') {
+		squares[index].style.backgroundColor = 'red';
 		const bombImg = document.createElement('img');
 		bombImg.src = 'img/explosion.png';
 		squares[index].appendChild(bombImg);
@@ -318,6 +322,16 @@ function openRecursion(index) {
 }
 
 function checkGameOver(condition, amount) {
+	//open the bombs upon end game
+	const squares = document.querySelectorAll('.square');
+	for (let i = 0; i < newGame.board.length; i++) {
+		let newArr = squares[i].classList.value.split(' ');
+		if (newGame.board[i] === 'x' && !newArr.includes('checked')) {
+			const bombImg = document.createElement('img');
+			bombImg.src = 'img/bomb.png';
+			squares[i].appendChild(bombImg);
+		}
+	}
 	if (condition === 'win') {
 		const gameOverModal = document.querySelector('.gameOverModal');
 		gameOverModal.classList.remove('hidden');
@@ -366,7 +380,7 @@ function startTimer() {
 		newGame.timer = 0;
 	}
 	const timer = document.querySelector('.timer');
-	timer.innerText = 100 - newGame.timer;
+	timer.innerText = `${100 - newGame.timer}`;
 	console.log(newGame.timer);
 }
 

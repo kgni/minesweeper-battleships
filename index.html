@@ -11,24 +11,33 @@
 	<body>
 		<main>
 			<h1>MINE SWEEPER</h1>
-			<div class="timer">100</div>
-			<div class="inputContainer">
-				<input class="inputBoardSize" type="text" value="9" />
-				<select class="selectLevel" name="level" id="selectLevel">
-					<option value="easy">Easy</option>
-					<option value="medium">Medium</option>
-					<option value="hard">Hard</option>
-					<option value="insane">Insane</option>
-					<option value="nightmare">Nightmare</option>
-				</select>
-				<button class="btnGenerateBoard">Generate</button>
+			<section class="gameinfo-container">
+				<div class="inputContainer">
+					<div class="input-level">
+						<input class="inputBoardSize" type="text" value="9" />
+						<select class="selectLevel" name="level" id="selectLevel">
+							<option value="easy">EASY</option>
+							<option value="medium">MEDIUM</option>
+							<option value="hard">HARD</option>
+							<option value="insane">INSANE</option>
+							<option value="nightmare">NIGHTMARE</option>
+						</select>
+					</div>
+					<button class="btnGenerateBoard">Generate</button>
+				</div>
+			</section>
+			<div class="bomb-container">
+				<div class="bombs">9</div>
+				<img src="./img/bomb.png" alt="" />
+				<div class="timer">100s</div>
+				<img src="./img/clock.png" alt="" />
 			</div>
-
 			<section class="boardContainer hidden"></section>
-			<div class="gameOverModal hidden">
-				<button class="restartBtn">Restart</button>
-			</div>
 		</main>
+
+		<div class="gameOverModal hidden">
+			<button class="restartBtn">Restart</button>
+		</div>
 		<script src="js/main.js"></script>
 	</body>
 </html>
