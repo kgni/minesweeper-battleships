@@ -4,7 +4,7 @@
 
 ### The classic game of Minesweeper now with user adaptable boardsizing and different difficulty settings. 
 
-## Tech Used: ![JAVASCRIPT BADGE](https://img.shields.io/static/v1?label=|&message=JAVASCRIPT&color=3c7f5d&style=plastic&logo=javascript)
+## Tech Used: <img src="https://img.shields.io/static/v1?label=|&message=HTML5&color=23555f&style=plastic&logo=html5"/> <img src="https://img.shields.io/static/v1?label=|&message=CSS3&color=285f65&style=plastic&logo=css3"/> <img src="https://img.shields.io/static/v1?label=|&message=JAVASCRIPT&color=3c7f5d&style=plastic&logo=javascript"/>
 
 To succesfully create the Minesweeper application DOM manipulation, String manipulation, Array manipulation and Recursion was used.
 
