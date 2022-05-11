@@ -2,7 +2,7 @@
 <a href="https://minesweeperadaptable.netlify.app/" target="_blank">![minesweeper](https://user-images.githubusercontent.com/94518833/167867932-7bb493e7-91f5-4e8a-bc9d-32d3ada51843.gif)</a>
 
 
-### The classic game of Minesweeper now with useradaptable boardsizing and different difficulty settings. 
+### The classic game of Minesweeper now with user adaptable boardsizing and different difficulty settings. 
 
 ## Tech Used: ![JAVASCRIPT BADGE](https://img.shields.io/static/v1?label=|&message=JAVASCRIPT&color=3c7f5d&style=plastic&logo=javascript)
 
